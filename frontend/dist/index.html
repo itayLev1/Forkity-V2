@@ -1,0 +1,561 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forkify — Fresh recipes, healthier habits</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <style>:root {
+  --bg: #f7f1ea;
+  --panel: #ffffffc2;
+  --panel-strong: #fff;
+  --text: #1f2a37;
+  --muted: #5f6b7a;
+  --primary: #ff7a59;
+  --primary-dark: #ec5f41;
+  --accent: #f6c85f;
+  --green: #49b58c;
+  --green-soft: #ebfaf3;
+  --shadow: 0 25px 60px #1f2a3724;
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: radial-gradient(circle at top left, #ff7a5924, transparent 24%),
+          radial-gradient(circle at bottom right, #49b58c24, transparent 20%),
+          var(--bg);
+  color: var(--text);
+  margin: 0;
+  font-family: Manrope, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input {
+  font: inherit;
+}
+
+.shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 24px 56px;
+}
+
+.header {
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  background: #ffffff61;
+  border: 1px solid #1f2a370f;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header:before {
+  content: "";
+  z-index: 0;
+  background: linear-gradient(135deg, #fffc, #ffffff38);
+  position: absolute;
+  inset: 0;
+}
+
+.header__inner {
+  z-index: 1;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 30px;
+  display: flex;
+  position: relative;
+}
+
+.brand {
+  align-items: center;
+  gap: 12px;
+  min-width: 180px;
+  display: flex;
+}
+
+.brand__mark {
+  background: linear-gradient(135deg, var(--primary), #ff9f66);
+  color: #fff;
+  border-radius: 14px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  display: grid;
+  box-shadow: 0 14px 26px #ff7a595c;
+}
+
+.brand__text {
+  letter-spacing: -.05em;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.nav {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  display: flex;
+}
+
+.nav__links {
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+.nav__link {
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: .94rem;
+  font-weight: 600;
+  transition: all .25s;
+}
+
+.nav__link:hover, .nav__link--active {
+  color: var(--text);
+  background: #1f2a370d;
+}
+
+.nav__actions {
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.chip-btn, .primary-btn, .secondary-btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 700;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.chip-btn:hover, .primary-btn:hover, .secondary-btn:hover {
+  transform: translateY(-1px);
+}
+
+.chip-btn {
+  color: var(--text);
+  background: #1f2a370d;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  box-shadow: 0 12px 24px #ec5f4147;
+}
+
+.secondary-btn {
+  color: var(--text);
+  background: #fffffff0;
+  border: 1px solid #1f2a370f;
+}
+
+.hero {
+  grid-template-columns: 1.08fr .92fr;
+  align-items: center;
+  gap: 30px;
+  padding: 52px 32px 36px;
+  display: grid;
+}
+
+.hero__copy {
+  padding: 8px 10px 8px 6px;
+}
+
+.eyebrow {
+  color: #1a8a65;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: #49b58c1f;
+  border-radius: 999px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: .82rem;
+  font-weight: 800;
+  display: inline-flex;
+}
+
+.eyebrow:before {
+  content: "";
+  background: var(--green);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 0 6px #49b58c26;
+}
+
+h1 {
+  letter-spacing: -.065em;
+  margin: 22px 0 18px;
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  line-height: .96;
+}
+
+h1 .highlight {
+  color: var(--primary-dark);
+  display: inline-block;
+  position: relative;
+}
+
+h1 .highlight:after {
+  content: "";
+  z-index: -1;
+  background: #ff7a592e;
+  border-radius: 999px;
+  height: .24em;
+  position: absolute;
+  bottom: .08em;
+  left: 0;
+  right: 0;
+}
+
+.hero__lead {
+  max-width: 560px;
+  color: var(--muted);
+  margin: 0;
+  font-size: 1.06rem;
+  line-height: 1.8;
+}
+
+.hero__actions {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+  display: flex;
+}
+
+.hero__meta {
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 30px;
+  display: flex;
+}
+
+.meta-card {
+  background: #ffffffb8;
+  border: 1px solid #1f2a370d;
+  border-radius: 18px;
+  min-width: 124px;
+  padding: 14px 18px;
+}
+
+.meta-card__value {
+  letter-spacing: -.05em;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: block;
+}
+
+.meta-card__label {
+  color: var(--muted);
+  margin-top: 4px;
+  font-size: .8rem;
+  display: block;
+}
+
+.hero__visual {
+  justify-content: center;
+  align-items: center;
+  min-height: 520px;
+  display: flex;
+  position: relative;
+}
+
+.visual-card {
+  background: linear-gradient(145deg, #ffffffe0, #f9f5f0e6);
+  border: 1px solid #1f2a370f;
+  border-radius: 30px;
+  width: min(100%, 490px);
+  padding: 18px;
+  position: relative;
+  box-shadow: 0 30px 60px #1f2a371f;
+}
+
+.visual-card__top {
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  display: flex;
+}
+
+.badge {
+  color: var(--primary-dark);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: #ff7a5914;
+  border-radius: 999px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: .75rem;
+  font-weight: 800;
+  display: inline-flex;
+}
+
+.dot-group {
+  gap: 8px;
+  display: flex;
+}
+
+.dot {
+  background: #1f2a3726;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.dot:first-child {
+  background: #ff7a59;
+}
+
+.dot:nth-child(2) {
+  background: #f6c85f;
+}
+
+.dot:nth-child(3) {
+  background: #49b58c;
+}
+
+.recipe-plate {
+  background: linear-gradient(135deg, #1f2a3724, #1f2a3705), url("https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80") center / cover no-repeat;
+  border-radius: 28px;
+  height: 360px;
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe-plate:before {
+  content: "";
+  backdrop-filter: blur(4px);
+  background: #ffffff2e;
+  border: 1px solid #ffffff47;
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  position: absolute;
+  inset: 24px 22px auto auto;
+}
+
+.floating-tag {
+  background: #ffffffe6;
+  border: 1px solid #1f2a3714;
+  border-radius: 18px;
+  padding: 12px 14px;
+  position: absolute;
+  bottom: 56px;
+  right: -10px;
+  box-shadow: 0 18px 30px #1f2a371f;
+}
+
+.floating-tag strong {
+  font-size: 1.1rem;
+  display: block;
+}
+
+.floating-tag span {
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+.mini-card {
+  background: #fffffff0;
+  border: 1px solid #1f2a370f;
+  border-radius: 22px;
+  min-width: 170px;
+  padding: 16px 18px;
+  position: absolute;
+  bottom: 18px;
+  left: -20px;
+  box-shadow: 0 18px 28px #1f2a3714;
+}
+
+.mini-card__label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .72rem;
+  display: block;
+}
+
+.mini-card__value {
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-weight: 800;
+  display: flex;
+}
+
+.mini-card__value span:last-child {
+  color: var(--green);
+}
+
+@media (width <= 940px) {
+  .header__inner, .hero {
+    flex-direction: column;
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .header__inner {
+    display: grid;
+  }
+
+  .nav {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+@media (width <= 640px) {
+  .shell {
+    padding-inline: 16px;
+  }
+
+  .header__inner, .hero {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .nav__links {
+    flex-wrap: wrap;
+  }
+
+  .hero__actions, .nav__actions {
+    width: 100%;
+  }
+
+  .primary-btn, .secondary-btn {
+    text-align: center;
+    flex: 1;
+  }
+
+  .hero__meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid;
+  }
+}
+</style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="header">
+        <div class="header__inner">
+          <div class="brand" aria-label="Forkify home">
+            <div class="brand__mark">F</div>
+            <div class="brand__text">forkify</div>
+          </div>
+
+          <nav class="nav" aria-label="Main navigation">
+            <ul class="nav__links">
+              <li><a class="nav__link nav__link--active" href="#">Home</a></li>
+              <li><a class="nav__link" href="#">Recipes</a></li>
+              <li><a class="nav__link" href="#">Collections</a></li>
+              <li><a class="nav__link" href="#">Cookbooks</a></li>
+            </ul>
+
+            <div class="nav__actions">
+              <button class="chip-btn" type="button">Log in</button>
+              <button class="primary-btn" type="button">Get started</button>
+            </div>
+          </nav>
+        </div>
+
+        <div class="hero">
+          <div class="hero__copy">
+            <span class="eyebrow">Freshly curated</span>
+            <h1>
+              Bring <span class="highlight">home-cooked joy</span>
+              back to your kitchen.
+            </h1>
+            <p class="hero__lead">
+              Discover vibrant recipes, smart meal ideas, and everyday inspiration
+              designed to help you cook with confidence and enjoy every bite.
+            </p>
+
+            <div class="hero__actions">
+              <button class="primary-btn" type="button">Explore recipes</button>
+              <button class="secondary-btn" type="button">Watch the demo</button>
+            </div>
+
+            <div class="hero__meta" aria-label="Summary stats">
+              <div class="meta-card">
+                <span class="meta-card__value">1.2M+</span>
+                <span class="meta-card__label">recipes</span>
+              </div>
+              <div class="meta-card">
+                <span class="meta-card__value">4.9/5</span>
+                <span class="meta-card__label">average rating</span>
+              </div>
+              <div class="meta-card">
+                <span class="meta-card__value">24k</span>
+                <span class="meta-card__label">happy cooks</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__visual" aria-label="Featured recipe preview">
+            <div class="visual-card">
+              <div class="visual-card__top">
+                <span class="badge">Chef’s pick</span>
+                <div class="dot-group" aria-hidden="true">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+              </div>
+
+              <div class="recipe-plate" role="img" aria-label="Sunrise Citrus Bowl recipe image"></div>
+
+              <div class="floating-tag">
+                <strong>32 min</strong>
+                <span>Easy &amp; vibrant</span>
+              </div>
+
+              <div class="mini-card">
+                <span class="mini-card__label">This week</span>
+                <div class="mini-card__value">
+                  <span>Sunrise Citrus Bowl</span>
+                  <span>★ 4.8</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+  
+
+<script src="/frontend.3464ddca.js"></script></body></html>
