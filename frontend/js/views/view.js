@@ -85,7 +85,7 @@ export default class View {
     </svg>
   </div>
     `
-    this._clear;
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
 
   }
@@ -103,7 +103,7 @@ export default class View {
             </div>
             `
 
-    this._clear;
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
 
   }
@@ -121,7 +121,7 @@ export default class View {
             </div>
             `
 
-    this._clear;
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
 
   }

@@ -1,5 +1,6 @@
 // import { log10 } from "core-js/core/number";
 import View from "./view.js";
+import { handleUploadSubmit } from '../utils/uploadGuard.js';
 
 class AddRecipeView extends View {
   _parentElement = document.querySelector('.upload');
@@ -13,7 +14,6 @@ class AddRecipeView extends View {
     super()
       this.addHandlerShowWindow();
       this.addHandlerHideWindow()
-      this.addHandlerUpload()
   }
 
   toggleWindow() {
@@ -34,13 +34,7 @@ class AddRecipeView extends View {
   }
   
   addHandlerUpload(handler) {
-    this._parentElement.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const dataArr = [...new FormData(this)]; // using deconstruction together with the spread operator will give the object in an array.
-      // console.log(dataArr);
-      const data = Object.fromEntries(dataArr)
-      handler(data)
-    })
+    return handleUploadSubmit(handler, this._parentElement);
   }
   
   generateMarkup() {
