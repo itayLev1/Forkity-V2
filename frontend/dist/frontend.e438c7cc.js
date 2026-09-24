@@ -207,11 +207,11 @@
       });
     }
   }
-})({"5HW5M":[function(require,module,exports,__globalThis) {
+})({"91qaj":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
-var HMR_SERVER_PORT = 1234;
+var HMR_SERVER_PORT = 40443;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "439701173a9199ea";
 var HMR_USE_SSE = false;
@@ -960,14 +960,12 @@ const controlServings = function(newServings = _modelJs.state.recipe.servings) {
     // recipeView.render(model.state.recipe);
     (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
 };
-const controlAddBookmark = function() {
-    // adds or removes bookmark at the current recipe (boolean)
-    if (!_modelJs.state.recipe.bookmarked) _modelJs.addBookmark(_modelJs.state.recipe);
-    else _modelJs.deleteBookmark(_modelJs.state.recipe.id);
+const controlAddBookmark = async function() {
+    await _modelJs.initializeUser();
+    if (!_modelJs.state.recipe.bookmarked) await _modelJs.addBookmark(_modelJs.state.recipe);
+    else await _modelJs.deleteBookmark(_modelJs.state.recipe.id);
     console.log(_modelJs.state.recipe);
-    // updates recipeView with new bookmark data
     (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
-    // render the bookmarks
     (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
 const controlBookmarks = function() {
@@ -2274,6 +2272,8 @@ parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
 parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
+parcelHelpers.export(exports, "initializeUser", ()=>initializeUser);
+parcelHelpers.export(exports, "syncBookmarks", ()=>syncBookmarks);
 parcelHelpers.export(exports, "addBookmark", ()=>addBookmark);
 parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
 parcelHelpers.export(exports, "uploadRecipe", ()=>uploadRecipe);
@@ -2289,30 +2289,28 @@ const state = {
         pageNum: 1,
         resultsPerPage: (0, _configJs.RESULTS_PER_PAGE)
     },
-    bookmarks: []
+    bookmarks: [],
+    user: null
 };
 const createRecipeObject = function(data) {
-    //* save the recipe 
-    const { recipe } = data.data;
+    const payload = data?.data?.recipe ?? data?.recipe ?? data;
     return {
-        id: recipe.id,
-        title: recipe.title,
-        publisher: recipe.publisher,
-        sourceUrl: recipe.source_url,
-        image: recipe.image_url,
-        servings: recipe.servings,
-        cookingTime: recipe.cooking_time,
-        ingredients: recipe.ingredients,
-        ...recipe.key && {
-            key: recipe.key
-        } // short circuiting
+        id: payload.id,
+        title: payload.title,
+        publisher: payload.publisher,
+        sourceUrl: payload.sourceUrl ?? payload.source_url,
+        image: payload.imageUrl ?? payload.image_url,
+        servings: payload.servings,
+        cookingTime: payload.cookingTime ?? payload.cooking_time,
+        ingredients: payload.ingredients ?? [],
+        ...payload.key && {
+            key: payload.key
+        }
     };
 };
 const loadRecipe = async function(id) {
     try {
-        //* load recipe data
-        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/${id}?key=${(0, _configJs.KEY)}`);
-        //* set state with fetched recipe
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/recipes/${id}`);
         state.recipe = createRecipeObject(data);
         if (state.bookmarks.some((bookmark)=>bookmark.id === id)) state.recipe.bookmarked = true;
         else state.recipe.bookmarked = false;
@@ -2327,13 +2325,14 @@ const loadSearchResults = async (query)=>{
         const normalizedQuery = query.trim();
         if (!normalizedQuery) return;
         state.search.query = normalizedQuery;
-        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}?search=${normalizedQuery}&key=${(0, _configJs.KEY)}`);
-        state.search.results = data.data.recipes.map((rec)=>{
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/recipes/search?search=${encodeURIComponent(normalizedQuery)}`);
+        const recipes = data?.data?.recipes ?? data?.recipes ?? [];
+        state.search.results = recipes.map((rec)=>{
             return {
                 id: rec.id,
                 title: rec.title,
                 publisher: rec.publisher,
-                image: rec.image_url,
+                image: rec.imageUrl ?? rec.image_url,
                 ...rec.key && {
                     key: rec.key
                 }
@@ -2366,32 +2365,71 @@ const persistBookmarks = function() {
     localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
     console.log('state.bookmarks: ', state.bookmarks);
 };
-const addBookmark = function(recipe) {
+const persistUser = function() {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem('forkity-user', JSON.stringify(state.user));
+};
+const initializeUser = async function() {
+    if (state.user) return state.user;
+    if (typeof localStorage === 'undefined') return null;
+    const savedUser = localStorage.getItem('forkity-user');
+    if (savedUser) {
+        state.user = JSON.parse(savedUser);
+        return state.user;
+    }
+    const payload = {
+        email: `demo-${Date.now()}@forkity.local`,
+        name: 'Demo User',
+        password: 'password123'
+    };
+    const user = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/users`, payload);
+    state.user = user;
+    persistUser();
+    return state.user;
+};
+const syncBookmarks = async function() {
+    if (!state.user) return;
+    try {
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/users/${state.user.id}/bookmarks`);
+        state.bookmarks = data.map((recipe)=>({
+                id: recipe.id,
+                title: recipe.title,
+                publisher: recipe.publisher,
+                image: recipe.imageUrl ?? recipe.image_url,
+                sourceUrl: recipe.sourceUrl ?? recipe.source_url,
+                cookingTime: recipe.cookingTime ?? recipe.cooking_time,
+                servings: recipe.servings,
+                ingredients: recipe.ingredients ?? []
+            }));
+        persistBookmarks();
+    } catch (err) {
+        console.log('syncBookmarks skipped', err);
+    }
+};
+const addBookmark = async function(recipe) {
+    if (!state.user) await initializeUser();
     if (state.bookmarks.some((bookmark)=>bookmark.id === recipe.id)) return;
-    // add bookmark
     state.bookmarks.push(recipe);
-    // mark current recipe as bookmarked
     if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+    if (state.user) await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/users/${state.user.id}/bookmarks/${recipe.id}`, undefined, 'POST');
     console.log('added bookmark');
-    // save bookmarks array to local storage (as a string). to update the persisting bookmarks (on local storage)
     persistBookmarks();
 };
-const deleteBookmark = function(id) {
-    // delete bookmark
+const deleteBookmark = async function(id) {
     const index = state.bookmarks.findIndex((el)=>el.id === id);
     if (index === -1) return;
     state.bookmarks.splice(index, 1);
-    // mark current recipe as NOT bookmarked
     if (id === state.recipe.id) state.recipe.bookmarked = false;
+    if (state.user) await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/users/${state.user.id}/bookmarks/${id}`, undefined, 'DELETE');
     console.log('deleted bookmark');
-    // save bookmarks array to local storage (as a string). to update the persisting bookmarks (on local storage)
     persistBookmarks();
 };
 const init = function() {
     if (typeof localStorage === 'undefined') return;
     const storage = localStorage.getItem('bookmarks');
     if (storage) state.bookmarks = JSON.parse(storage);
-// console.log(storage.parse());
+    const savedUser = localStorage.getItem('forkity-user');
+    if (savedUser) state.user = JSON.parse(savedUser);
 };
 init();
 // FOR TESTING & DEBUGGING
@@ -2412,14 +2450,15 @@ const uploadRecipe = async function(newRecipe) {
         });
         const recipe = {
             title: newRecipe.title,
-            source_url: newRecipe.sourceUrl,
-            image_url: newRecipe.image,
+            sourceUrl: newRecipe.sourceUrl,
+            imageUrl: newRecipe.image,
             publisher: newRecipe.publisher,
-            cooking_time: +newRecipe.cookingTime,
+            cookingTime: +newRecipe.cookingTime,
             servings: +newRecipe.servings,
-            ingredients
+            ingredients,
+            userId: 'local-user'
         };
-        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}?key=${(0, _configJs.KEY)}`, recipe);
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/recipes`, recipe);
         state.recipe = createRecipeObject(data);
         addBookmark(state.recipe);
     } catch (err) {
@@ -3025,7 +3064,7 @@ parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC);
 parcelHelpers.export(exports, "RESULTS_PER_PAGE", ()=>RESULTS_PER_PAGE);
 parcelHelpers.export(exports, "KEY", ()=>KEY);
 parcelHelpers.export(exports, "MODAL_CLOSE_SEC", ()=>MODAL_CLOSE_SEC);
-const API_URL = `https://forkify-api.herokuapp.com/api/v2/recipes/`;
+const API_URL = 'http://localhost:4000/api';
 const TIMEOUT_SEC = 10;
 const RESULTS_PER_PAGE = 10;
 const KEY = 'b1a56b05-a4a7-41aa-a75a-da3b90b73293';
@@ -3076,15 +3115,17 @@ const timeout = function(s = (0, _configJs.TIMEOUT_SEC)) {
         }, s * 1000);
     });
 };
-const AJAX = async function(url, uploadData) {
+const AJAX = async function(url, uploadData, method = uploadData ? 'POST' : 'GET') {
     try {
-        const fetchPro = uploadData ? fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(uploadData)
-        }) : fetch(url);
+        const fetchPro = fetch(url, {
+            method,
+            ...uploadData ? {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(uploadData)
+            } : {}
+        });
         const res = await Promise.race([
             fetchPro,
             timeout((0, _configJs.TIMEOUT_SEC))
@@ -3601,6 +3642,6 @@ const handleUploadSubmit = function(handler, formElement) {
     return true;
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5HW5M","cCMpN"], "cCMpN", "parcelRequire3a11", {}, "./", "/")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["91qaj","cCMpN"], "cCMpN", "parcelRequire3a11", {}, "./", "/")
 
 //# sourceMappingURL=frontend.e438c7cc.js.map

@@ -4,13 +4,10 @@
 - 2026-09-23
 
 ## Status
-- Stage 2 frontend foundation is complete.
-- Stage 3 functional app work is stabilized.
-- Stage 4 search flow validation is complete.
-- Stage 5 Dockerization is complete.
-- Stage 6 Jenkins CI pipeline is complete.
-- Stage 7 deployment repository separation strategy is documented.
-- Design polishing is intentionally deferred until a later stage.
+- Stages 2 through 8 are complete.
+- Frontend, backend, PostgreSQL, Docker, Jenkins, and deployment separation are integrated.
+- Final local orchestration is available through the root `npm start` command.
+- Design polishing remains intentionally deferred until a later stage.
 
 ## Completed work
 - Reviewed app scope and architecture.
@@ -24,15 +21,14 @@
 - Verified with: npm test and npm run build.
 
 ## Verification evidence
-- npm test: 1 passing test, 0 failing tests
-- npm run build: Parcel build succeeded
+- Frontend tests: 4 passing tests, 0 failing tests
+- Frontend build: Parcel build succeeded
+- Prisma schema validation and database sync succeeded
+- Backend health check returned `{"status":"ok","database":"connected"}`
+- Root development workflow started backend on port 4000 and frontend on port 1234
 
 ## Next session target
-- Continue with Stage 8: backend and database integration with users + bookmarks
-  - define Prisma schema
-  - add database models
-  - connect API endpoints for users, recipes, and bookmarks
-  - wire frontend to backend state
+- Continue with end-to-end feature polish and deployment preparation.
 
 ## Future phases planned
 - backend and database integration with users and bookmarks
