@@ -43,3 +43,26 @@ test('bookmark toggling keeps one copy and ignores unknown deletions', async () 
   );
   assert.equal(state.recipe.servings, 4, 'servings count should update to the new value');
 });
+
+test('search input trims whitespace before processing', async () => {
+  const searchField = { value: '   veggie curry   ' };
+
+  globalThis.document = {
+    querySelector(selector) {
+      if (selector === '.search') {
+        return {
+          querySelector(innerSelector) {
+            if (innerSelector === '.search__field') return searchField;
+            return null;
+          },
+        };
+      }
+      return null;
+    },
+  };
+
+  const { default: searchView } = await import('../js/views/searchView.js');
+
+  assert.equal(searchView.getQuery(), 'veggie curry', 'search text should be trimmed before being used');
+  assert.equal(searchField.value, '', 'search input should be cleared after reading');
+});

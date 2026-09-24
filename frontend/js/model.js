@@ -62,10 +62,13 @@ const createRecipeObject = function(data) {
 //* Search
 export const loadSearchResults = async (query) => {
   try {
+    const normalizedQuery = query.trim();
 
-    state.search.query = query;
+    if (!normalizedQuery) return;
 
-    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`);
+    state.search.query = normalizedQuery;
+
+    const data = await AJAX(`${API_URL}?search=${normalizedQuery}&key=${KEY}`);
 
     state.search.results = data.data.recipes.map(rec => {
       return {

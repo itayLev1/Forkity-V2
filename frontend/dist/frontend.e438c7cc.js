@@ -2314,19 +2314,6 @@ const loadRecipe = async function(id) {
         const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}/${id}?key=${(0, _configJs.KEY)}`);
         //* set state with fetched recipe
         state.recipe = createRecipeObject(data);
-        //* save the recipe 
-        const { recipe } = data.data;
-        //* set state with fetched recipe
-        state.recipe = {
-            id: recipe.id,
-            title: recipe.title,
-            publisher: recipe.publisher,
-            sourceUrl: recipe.source_url,
-            image: recipe.image_url,
-            servings: recipe.servings,
-            cookingTime: recipe.cooking_time,
-            ingredients: recipe.ingredients
-        };
         if (state.bookmarks.some((bookmark)=>bookmark.id === id)) state.recipe.bookmarked = true;
         else state.recipe.bookmarked = false;
         console.log('recipe in state: ', state.recipe);
@@ -2337,8 +2324,10 @@ const loadRecipe = async function(id) {
 };
 const loadSearchResults = async (query)=>{
     try {
-        state.search.query = query;
-        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}?search=${query}&key=${(0, _configJs.KEY)}`);
+        const normalizedQuery = query.trim();
+        if (!normalizedQuery) return;
+        state.search.query = normalizedQuery;
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.API_URL)}?search=${normalizedQuery}&key=${(0, _configJs.KEY)}`);
         state.search.results = data.data.recipes.map((rec)=>{
             return {
                 id: rec.id,
@@ -2373,10 +2362,12 @@ const updateServings = function(newServings) {
     state.recipe.servings = newServings;
 };
 const persistBookmarks = function() {
+    if (typeof localStorage === 'undefined') return;
     localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
     console.log('state.bookmarks: ', state.bookmarks);
 };
 const addBookmark = function(recipe) {
+    if (state.bookmarks.some((bookmark)=>bookmark.id === recipe.id)) return;
     // add bookmark
     state.bookmarks.push(recipe);
     // mark current recipe as bookmarked
@@ -2388,6 +2379,7 @@ const addBookmark = function(recipe) {
 const deleteBookmark = function(id) {
     // delete bookmark
     const index = state.bookmarks.findIndex((el)=>el.id === id);
+    if (index === -1) return;
     state.bookmarks.splice(index, 1);
     // mark current recipe as NOT bookmarked
     if (id === state.recipe.id) state.recipe.bookmarked = false;
@@ -2396,6 +2388,7 @@ const deleteBookmark = function(id) {
     persistBookmarks();
 };
 const init = function() {
+    if (typeof localStorage === 'undefined') return;
     const storage = localStorage.getItem('bookmarks');
     if (storage) state.bookmarks = JSON.parse(storage);
 // console.log(storage.parse());
@@ -3409,7 +3402,7 @@ parcelHelpers.defineInteropFlag(exports);
 class SearchView {
     _parentElement = document.querySelector('.search');
     getQuery() {
-        const query = this._parentElement.querySelector('.search__field').value;
+        const query = this._parentElement.querySelector('.search__field').value.trim();
         this._clearInput();
         return query;
     }
@@ -3590,7 +3583,7 @@ class AddRecipeView extends (0, _viewJsDefault.default) {
 }
 exports.default = new AddRecipeView();
 
-},{"./view.js":"1NSW9","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","../utils/uploadGuard.js":"graMw"}],"graMw":[function(require,module,exports,__globalThis) {
+},{"./view.js":"1NSW9","../utils/uploadGuard.js":"graMw","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"graMw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "handleUploadSubmit", ()=>handleUploadSubmit);

@@ -1,0 +1,13 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: forkity-frontend
+    working_dir: /app
+    ports:
+      - "1234:1234"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run start -- --host 0.0.0.0
