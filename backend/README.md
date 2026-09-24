@@ -22,6 +22,14 @@ Current responsibilities:
 5. Start the server:
    - `npm run dev`
 
+The complete Docker Compose stack also includes the backend API and database:
+
+```bash
+docker compose up --build
+```
+
+The backend container waits for PostgreSQL readiness before starting and exposes port `4000`.
+
 ## API health check
 
 - `GET /api/health`

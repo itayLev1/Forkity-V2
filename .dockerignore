@@ -1,0 +1,8 @@
+.git
+frontend
+backend/node_modules
+backend/.env
+database/.env
+**/.parcel-cache
+**/dist
+**/node_modules

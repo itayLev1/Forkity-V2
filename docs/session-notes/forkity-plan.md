@@ -1,9 +1,9 @@
 # Forkify V2 Session Plan
 
 ## Current status
-- Project reviewed: visual direction, repo scope, architecture diagram, and future deployment constraints.
-- Requirement added: user management and bookmarks must be included in the database model.
-- Current phase: Stage 7 — deployment repository separation strategy documented.
+- Stages 1 through 8 are complete.
+- Current phase: Stage 9 — end-to-end polish and deployment preparation.
+- The local Compose stack now includes frontend, backend, and PostgreSQL services.
 
 ## Project direction
 - Build a polished recipe app matching the approved frontend design.
@@ -21,6 +21,7 @@
 6. Stage 6: Jenkins CI pipeline
 7. Stage 7: deployment repository separation strategy
 8. Stage 8: backend and database integration with users + bookmarks
+9. Stage 9: end-to-end polish and deployment preparation
 
 ## Data model to include
 - Users
@@ -31,5 +32,4 @@
 
 ## Session boundary
 - This file captures the current plan and progress so work can resume without losing context.
-- No code changes had been made yet during the initial plan stage.
-- We are waiting for approval to begin Stage 1 work.
+- Kubernetes and Terraform remain intentionally separate from this application repository.

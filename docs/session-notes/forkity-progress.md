@@ -5,6 +5,7 @@
 
 ## Status
 - Stages 2 through 8 are complete.
+- Stage 9 is in progress: end-to-end polish and deployment preparation.
 - Frontend, backend, PostgreSQL, Docker, Jenkins, and deployment separation are integrated.
 - Final local orchestration is available through the root `npm start` command.
 - Design polishing remains intentionally deferred until a later stage.
@@ -26,9 +27,15 @@
 - Prisma schema validation and database sync succeeded
 - Backend health check returned `{"status":"ok","database":"connected"}`
 - Root development workflow started backend on port 4000 and frontend on port 1234
+- Backend Docker image builds successfully with Prisma and OpenSSL runtime support
+- Compose configuration validates successfully
+
+## Current stage note
+- The backend container health check is configured against `/api/health`.
+- In this environment, an existing database container accepts local connections but times out for container-to-container TCP probes; the image and Compose configuration are otherwise validated.
 
 ## Next session target
-- Continue with end-to-end feature polish and deployment preparation.
+- Complete end-to-end Compose runtime validation in an environment with normal container networking.
 
 ## Future phases planned
 - backend and database integration with users and bookmarks
