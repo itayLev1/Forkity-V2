@@ -23,35 +23,30 @@ export const state = {
 };
 
 const createRecipeObject = function(data) {
-      //* save the recipe 
-      const { recipe } = data.data;
-    
+      const payload = data?.data?.recipe ?? data?.recipe ?? data;
+
       return {
-        id: recipe.id,
-        title: recipe.title,
-        publisher: recipe.publisher,
-        sourceUrl: recipe.source_url,
-        image: recipe.image_url,
-        servings: recipe.servings,
-        cookingTime: recipe.cooking_time,
-        ingredients: recipe.ingredients,
-        ...(recipe.key && {key: recipe.key}) // short circuiting
+        id: payload.id,
+        title: payload.title,
+        publisher: payload.publisher,
+        sourceUrl: payload.sourceUrl ?? payload.source_url,
+        image: payload.imageUrl ?? payload.image_url,
+        servings: payload.servings,
+        cookingTime: payload.cookingTime ?? payload.cooking_time,
+        ingredients: payload.ingredients ?? [],
+        ...(payload.key && { key: payload.key })
       }
     }
     
     export const loadRecipe = async function (id) {
       try {
-        
-    //* load recipe data
-    const data = await AJAX(`${API_URL}/${id}?key=${KEY}`);
-        
-    //* set state with fetched recipe
-    state.recipe = createRecipeObject(data)
+        const data = await AJAX(`${API_URL}/recipes/${id}`);
+        state.recipe = createRecipeObject(data)
 
-    if (state.bookmarks.some(bookmark => bookmark.id === id)) state.recipe.bookmarked = true
-    else state.recipe.bookmarked = false
+        if (state.bookmarks.some(bookmark => bookmark.id === id)) state.recipe.bookmarked = true
+        else state.recipe.bookmarked = false
 
-    console.log('recipe in state: ', state.recipe);
+        console.log('recipe in state: ', state.recipe);
 
   } catch (err) {
     console.error(`loadRecipe Error 😎: ${err}`);
@@ -68,14 +63,16 @@ export const loadSearchResults = async (query) => {
 
     state.search.query = normalizedQuery;
 
-    const data = await AJAX(`${API_URL}?search=${normalizedQuery}&key=${KEY}`);
+    const data = await AJAX(`${API_URL}/recipes/search?search=${encodeURIComponent(normalizedQuery)}`);
 
-    state.search.results = data.data.recipes.map(rec => {
+    const recipes = data?.data?.recipes ?? data?.recipes ?? [];
+
+    state.search.results = recipes.map(rec => {
       return {
         id: rec.id,
         title: rec.title,
         publisher: rec.publisher,
-        image: rec.image_url,
+        image: rec.imageUrl ?? rec.image_url,
         ...(rec.key && {key: rec.key}),
       }
     })
@@ -183,15 +180,16 @@ export const uploadRecipe = async function(newRecipe) {
   
   const recipe = {
     title: newRecipe.title,
-    source_url: newRecipe.sourceUrl,
-    image_url: newRecipe.image,
+    sourceUrl: newRecipe.sourceUrl,
+    imageUrl: newRecipe.image,
     publisher: newRecipe.publisher,
-    cooking_time: +newRecipe.cookingTime,
+    cookingTime: +newRecipe.cookingTime,
     servings: +newRecipe.servings,
     ingredients,
+    userId: 'local-user'
   }
   
-  const data = await AJAX(`${API_URL}?key=${KEY}`, recipe)
+  const data = await AJAX(`${API_URL}/recipes`, recipe)
 
   state.recipe = createRecipeObject(data);
 

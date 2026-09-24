@@ -3,7 +3,7 @@
 //~ with this variables we can change the configuration of our project.
 
 
-export const API_URL = `https://forkify-api.herokuapp.com/api/v2/recipes/`;
+export const API_URL = 'http://localhost:4000/api';
 
 export const TIMEOUT_SEC = 10;
 

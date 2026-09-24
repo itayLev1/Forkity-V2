@@ -11,6 +11,7 @@ dotenv.config();
 
 const app = express();
 const PORT = Number(process.env.PORT || 4000);
+const FORKIFY_REMOTE_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes';
 
 app.use(cors());
 app.use(express.json());
@@ -93,6 +94,42 @@ app.get('/api/recipes', async (_req, res) => {
     res.json(recipes);
   } catch (error) {
     res.status(500).json({ message: 'Unable to fetch recipes', error: error.message });
+  }
+});
+
+app.get('/api/recipes/search', async (req, res) => {
+  try {
+    const query = String(req.query.search || '').trim();
+
+    if (!query) {
+      return res.status(400).json({ message: 'A search query is required' });
+    }
+
+    const response = await fetch(`${FORKIFY_REMOTE_URL}?search=${encodeURIComponent(query)}&key=${process.env.FORKIFY_API_KEY || 'demo'}`);
+    const payload = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(payload);
+    }
+
+    return res.json(payload);
+  } catch (error) {
+    return res.status(500).json({ message: 'Unable to search recipes', error: error.message });
+  }
+});
+
+app.get('/api/recipes/:id', async (req, res) => {
+  try {
+    const response = await fetch(`${FORKIFY_REMOTE_URL}/${req.params.id}?key=${process.env.FORKIFY_API_KEY || 'demo'}`);
+    const payload = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json(payload);
+    }
+
+    return res.json(payload);
+  } catch (error) {
+    return res.status(500).json({ message: 'Unable to fetch recipe', error: error.message });
   }
 });
 
