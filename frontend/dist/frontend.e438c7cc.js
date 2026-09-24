@@ -3606,7 +3606,16 @@ class BookmarksView extends (0, _viewJsDefault.default) {
     _parentElement = document.querySelector('.bookmarks__list');
     _errorMessage = `No bookmarks yet. Find a nice recipe and bookmark it \u{1F600}`;
     _message = '';
+    render(data, render = true) {
+        if (!this._parentElement) return;
+        return super.render(data, render);
+    }
+    update(data) {
+        if (!this._parentElement) return;
+        return super.update(data);
+    }
     addHandlerRender(handler) {
+        if (!this._parentElement) return;
         window.addEventListener('load', handler);
     }
     _generateMarkup() {

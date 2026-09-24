@@ -9,7 +9,18 @@ class BookmarksView extends View {
   
   _message = '';
 
+  render(data, render = true) {
+    if (!this._parentElement) return;
+    return super.render(data, render);
+  }
+
+  update(data) {
+    if (!this._parentElement) return;
+    return super.update(data);
+  }
+
   addHandlerRender(handler) {
+    if (!this._parentElement) return;
     window.addEventListener('load', handler);
   }
 
