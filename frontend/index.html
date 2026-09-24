@@ -597,6 +597,28 @@
         min-height: 520px;
       }
 
+      .recipe-empty {
+        min-height: 520px;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        padding: 32px;
+        text-align: center;
+      }
+
+      .recipe-empty h2 {
+        margin: 18px 0 8px;
+        font-size: 1.7rem;
+        letter-spacing: -0.04em;
+      }
+
+      .recipe-empty p {
+        max-width: 380px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
       .recipe__fig {
         position: relative;
         margin: 0;
@@ -941,9 +963,9 @@
           <nav class="nav" aria-label="Main navigation">
             <ul class="nav__links">
               <li><a class="nav__link nav__link--active" href="#home">Home</a></li>
-              <li><a class="nav__link" href="#recipes">Recipes</a></li>
+              <li><a class="nav__link" href="recipes.html">Recipes</a></li>
               <li><a class="nav__link" href="#collections">Collections</a></li>
-              <li><a class="nav__link" href="#cookbooks">Cookbooks</a></li>
+              <li><a class="nav__link" href="index.html#cookbooks">Cookbooks</a></li>
             </ul>
 
             <div class="nav__actions">
@@ -966,7 +988,7 @@
             </p>
 
             <div class="hero__actions">
-              <button class="primary-btn" type="button">Explore recipes</button>
+              <a class="primary-btn" href="recipes.html">Explore recipes</a>
               <button class="secondary-btn" type="button">Watch the demo</button>
             </div>
 
@@ -1030,7 +1052,13 @@
         </aside>
 
         <section class="recipe-panel">
-          <div class="recipe" aria-live="polite"></div>
+          <div class="recipe" aria-live="polite">
+            <div class="recipe-empty">
+              <span class="eyebrow eyebrow--small">Recipe workspace</span>
+              <h2>Choose a recipe to get started</h2>
+              <p>Search the library on the left, then select a result to see ingredients, servings, and cooking directions.</p>
+            </div>
+          </div>
         </section>
 
         <aside class="bookmarks-panel" id="collections">

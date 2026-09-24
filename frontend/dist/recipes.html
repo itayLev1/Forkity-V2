@@ -1,0 +1,623 @@
+<!DOCTYPE html><html lang="en"><head><script type="importmap">{"imports":{"kScn4":"/icons.bcb921cf.svg"}}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes | Forkify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <style>:root {
+  --bg: #f7f1ea;
+  --panel: #fffc;
+  --panel-strong: #fff;
+  --text: #1f2a37;
+  --muted: #5f6b7a;
+  --primary: #ff7a59;
+  --primary-dark: #ec5f41;
+  --green: #49b58c;
+  --shadow: 0 25px 60px #1f2a3724;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--text);
+  background: radial-gradient(circle at top left, #ff7a5924, transparent 24%),
+          radial-gradient(circle at bottom right, #49b58c24, transparent 20%),
+          var(--bg);
+  margin: 0;
+  font-family: Manrope, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input {
+  font: inherit;
+}
+
+.shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 24px 56px;
+}
+
+.header, .sidebar, .bookmarks-panel, .recipe-panel, .cookbooks-panel {
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  border: 1px solid #1f2a370f;
+  border-radius: 26px;
+}
+
+.header {
+  padding: 22px 30px;
+}
+
+.header__inner, .nav, .nav__links, .nav__actions, .bookmarks-panel__header {
+  align-items: center;
+  display: flex;
+}
+
+.header__inner {
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.brand__mark {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #ff9f66);
+  border-radius: 14px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-weight: 800;
+  display: grid;
+  box-shadow: 0 14px 26px #ff7a595c;
+}
+
+.brand__text {
+  letter-spacing: -.05em;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.nav {
+  gap: 22px;
+}
+
+.nav__links {
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__link {
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: .92rem;
+  font-weight: 700;
+  display: block;
+}
+
+.nav__link:hover, .nav__link--active {
+  color: var(--text);
+  background: #1f2a370f;
+}
+
+.nav__actions {
+  gap: 10px;
+}
+
+.chip-btn, .primary-btn, .secondary-btn, .btn--inline, .btn--round, .btn--tiny {
+  cursor: pointer;
+  border: 0;
+}
+
+.chip-btn, .primary-btn, .secondary-btn {
+  border-radius: 999px;
+  justify-content: center;
+  align-items: center;
+  padding: 11px 17px;
+  font-weight: 800;
+  display: inline-flex;
+}
+
+.chip-btn, .secondary-btn {
+  color: var(--text);
+  background: #1f2a370f;
+}
+
+.primary-btn {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  box-shadow: 0 12px 24px #ec5f4138;
+}
+
+.app-shell {
+  grid-template-columns: minmax(250px, 320px) minmax(0, 1fr) minmax(220px, 270px);
+  align-items: start;
+  gap: 24px;
+  margin-top: 28px;
+  display: grid;
+}
+
+.sidebar, .bookmarks-panel, .recipe-panel {
+  padding: 20px;
+}
+
+.section-heading {
+  letter-spacing: -.04em;
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+}
+
+.section-copy {
+  color: var(--muted);
+  margin: 0 0 18px;
+  line-height: 1.6;
+}
+
+.search {
+  background: #f7f1eaf2;
+  border: 1px solid #1f2a371a;
+  border-radius: 999px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px 9px 16px;
+  display: flex;
+}
+
+.search__field {
+  width: 100%;
+  color: var(--text);
+  background: none;
+  border: 0;
+  outline: 0;
+}
+
+.search__btn {
+  box-shadow: none;
+  padding: 9px 14px;
+}
+
+.results, .bookmarks__list {
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+
+.preview {
+  background: #ffffffe6;
+  border: 1px solid #1f2a370f;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.preview__link {
+  grid-template-columns: 76px 1fr;
+  gap: 12px;
+  padding: 10px;
+  display: grid;
+}
+
+.preview__link--active {
+  border-left: 3px solid var(--primary);
+  background: #ff7a5914;
+}
+
+.preview__fig {
+  margin: 0;
+}
+
+.preview__fig img {
+  object-fit: cover;
+  border-radius: 14px;
+  width: 76px;
+  height: 76px;
+  display: block;
+}
+
+.preview__title {
+  margin: 2px 0 4px;
+  font-size: .94rem;
+  line-height: 1.35;
+}
+
+.preview__publisher {
+  color: var(--muted);
+  margin: 0;
+  font-size: .74rem;
+}
+
+.recipe {
+  min-height: 620px;
+}
+
+.recipe__fig {
+  border-radius: 22px;
+  height: 300px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe__img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.recipe__title {
+  color: #fff;
+  background: #1f2a3785;
+  border-radius: 16px;
+  margin: 0;
+  padding: 14px 18px;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.1;
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  right: 18px;
+}
+
+.recipe__details {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 6px 8px;
+  display: flex;
+}
+
+.recipe__info {
+  color: var(--muted);
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  display: flex;
+}
+
+.recipe__info-icon, .recipe__icon, .search__icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--primary);
+}
+
+.recipe__info-buttons {
+  gap: 8px;
+  margin-left: 8px;
+  display: flex;
+}
+
+.btn--tiny {
+  width: 28px;
+  height: 28px;
+  color: var(--primary-dark);
+  background: #ff7a591f;
+  border-radius: 50%;
+}
+
+.btn--round {
+  background: #ff7a591f;
+  border-radius: 50%;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-left: auto;
+  display: grid;
+}
+
+.btn--round svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--primary);
+}
+
+.recipe__ingredients, .recipe__directions {
+  padding: 20px 8px 8px;
+}
+
+.heading--2 {
+  margin: 0 0 14px;
+  font-size: 1.3rem;
+}
+
+.recipe__ingredient-list {
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+
+.recipe__ingredient {
+  align-items: flex-start;
+  gap: 10px;
+  display: flex;
+}
+
+.recipe__quantity {
+  min-width: 34px;
+  font-weight: 700;
+}
+
+.recipe__description, .recipe__directions-text {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.recipe__unit, .recipe__publisher {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.recipe__btn {
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  display: inline-flex;
+}
+
+.pagination {
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 16px;
+  display: flex;
+}
+
+.btn--inline {
+  color: var(--text);
+  background: #ff7a591f;
+  border-radius: 999px;
+  padding: 10px 12px;
+  font-weight: 800;
+}
+
+.bookmarks-panel__header {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.eyebrow {
+  color: #1a8a65;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: #49b58c1f;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: .7rem;
+  font-weight: 800;
+  display: inline-flex;
+}
+
+.bookmark-empty, .error, .message {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.recipe-empty {
+  text-align: center;
+  place-content: center;
+  justify-items: center;
+  min-height: 620px;
+  padding: 32px;
+  display: grid;
+}
+
+.recipe-empty h2 {
+  letter-spacing: -.04em;
+  margin: 18px 0 8px;
+  font-size: 1.7rem;
+}
+
+.recipe-empty p {
+  max-width: 390px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.7;
+}
+
+.add-recipe-window {
+  z-index: 30;
+  width: min(92vw, 820px);
+  box-shadow: var(--shadow);
+  background: #fff;
+  border-radius: 28px;
+  padding: 28px 30px 22px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.overlay {
+  z-index: 20;
+  background: #1f2a374d;
+  position: fixed;
+  inset: 0;
+}
+
+.btn--close-modal {
+  color: var(--muted);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  font-size: 2.4rem;
+  position: absolute;
+  top: 8px;
+  right: 14px;
+}
+
+.upload {
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  display: grid;
+}
+
+.upload__heading {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.upload__column {
+  grid-template-columns: 110px 1fr;
+  align-items: center;
+  gap: 8px 12px;
+  display: grid;
+}
+
+.upload__column label {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.upload__column input {
+  border: 1px solid #1f2a371f;
+  border-radius: 12px;
+  width: 100%;
+  padding: 10px 12px;
+}
+
+.upload__btn {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  grid-column: 1 / -1;
+  justify-self: center;
+  padding: 12px 18px;
+  font-weight: 800;
+}
+
+@media (width <= 1080px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 700px) {
+  .header__inner, .nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav__links {
+    flex-wrap: wrap;
+  }
+
+  .app-shell {
+    margin-top: 18px;
+  }
+
+  .upload {
+    grid-template-columns: 1fr;
+  }
+
+  .upload__heading, .upload__btn {
+    grid-column: auto;
+  }
+}
+</style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="header">
+        <div class="header__inner">
+          <a class="brand" href="/index.html" aria-label="Forkify home">
+            <div class="brand__mark">F</div>
+            <div class="brand__text">forkify</div>
+          </a>
+          <nav class="nav" aria-label="Main navigation">
+            <ul class="nav__links">
+              <li><a class="nav__link" href="/index.html">Home</a></li>
+              <li><a class="nav__link nav__link--active" href="/recipes.html">Recipes</a></li>
+              <li><a class="nav__link" href="/index.html#collections">Collections</a></li>
+              <li><a class="nav__link" href="/index.html#cookbooks">Cookbooks</a></li>
+            </ul>
+            <div class="nav__actions">
+              <button class="chip-btn" type="button">Log in</button>
+              <button class="primary-btn nav__btn--add-recipe" type="button">Get started</button>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <main class="app-shell">
+        <aside class="sidebar">
+          <h1 class="section-heading">Find a recipe</h1>
+          <p class="section-copy">Search the library and open a dish to see its ingredients and directions.</p>
+          <form class="search" role="search">
+            <input class="search__field" type="text" placeholder="Search for recipes..." aria-label="Search recipes">
+            <button class="primary-btn search__btn" type="submit">Search</button>
+          </form>
+          <ul class="results" aria-live="polite"></ul>
+          <div class="pagination"></div>
+        </aside>
+
+        <section class="recipe-panel">
+          <div class="recipe" aria-live="polite">
+            <div class="recipe-empty">
+              <span class="eyebrow">Recipe workspace</span>
+              <h2>Choose a recipe to get started</h2>
+              <p>Search the library on the left, then select a result to see ingredients, servings, and cooking directions.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="bookmarks-panel">
+          <div class="bookmarks-panel__header">
+            <span class="eyebrow">Collections</span>
+            <button class="chip-btn nav__btn--bookmarks" type="button">Bookmarks</button>
+          </div>
+          <p class="section-copy">Keep the recipes you want to cook again close at hand.</p>
+          <ul class="bookmarks__list"></ul>
+        </aside>
+      </main>
+    </div>
+
+    <div class="overlay hidden"></div>
+    <div class="add-recipe-window hidden" role="dialog" aria-modal="true">
+      <button class="btn--close-modal" type="button" aria-label="Close add recipe window">×</button>
+      <form class="upload">
+        <h3 class="upload__heading">Add your recipe</h3>
+        <div class="upload__column"><label for="title">Title</label><input id="title" name="title" type="text" required=""></div>
+        <div class="upload__column"><label for="sourceUrl">URL</label><input id="sourceUrl" name="sourceUrl" type="url" required=""></div>
+        <div class="upload__column"><label for="image">Image</label><input id="image" name="image" type="url" required=""></div>
+        <div class="upload__column"><label for="publisher">Publisher</label><input id="publisher" name="publisher" type="text" required=""></div>
+        <div class="upload__column"><label for="cookingTime">Time</label><input id="cookingTime" name="cookingTime" type="number" min="1" required=""></div>
+        <div class="upload__column"><label for="servings">Servings</label><input id="servings" name="servings" type="number" min="1" required=""></div>
+        <div class="upload__column"><label for="ingredient-1">Ingredients</label><input id="ingredient-1" name="ingredient-1" type="text"></div>
+        <div class="upload__column"><label for="ingredient-2">Ingredients</label><input id="ingredient-2" name="ingredient-2" type="text"></div>
+        <div class="upload__column"><label for="ingredient-3">Ingredients</label><input id="ingredient-3" name="ingredient-3" type="text"></div>
+        <button class="upload__btn" type="submit">Submit recipe</button>
+      </form>
+    </div>
+
+    <script type="module" src="/frontend.e438c7cc.js"></script>
+  
+
+</body></html>

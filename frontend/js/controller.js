@@ -209,7 +209,9 @@ const controlRecipes = async function () {
     recipeView.renderSpinner();
 
     //* update results view to update selected search result
-    resultsView.update(model.getSearchResultsPage())
+    if (model.state.search.results.length) {
+      resultsView.update(model.getSearchResultsPage());
+    }
 
     //* update bookmarks view from localhost
     bookmarksView.update(model.state.bookmarks)
@@ -226,16 +228,19 @@ const controlRecipes = async function () {
     recipeView.renderError();
   }
 
-  // for TESTING
-  controlServings();
 }
 
 const controlSearchResults = async () => {
   try {
-    resultsView.renderSpinner();
     //* get search query
     const query = searchView.getQuery();
-    if (!query) return;
+    if (!query) {
+      resultsView.renderError('Enter a recipe name to start searching.');
+      document.querySelector('.pagination').innerHTML = '';
+      return;
+    }
+
+    resultsView.renderSpinner();
 
     //* set state with new search results
     await model.loadSearchResults(query);
@@ -248,6 +253,8 @@ const controlSearchResults = async () => {
 
   }catch(err) {
     console.log(`controlSearchResults Error 😎: ${err}`);
+    resultsView.renderError('Recipes could not be loaded. Please try again.');
+    document.querySelector('.pagination').innerHTML = '';
   }
 }
 
@@ -320,7 +327,10 @@ const controlNavigation = function(event) {
   const link = event.target.closest('.nav__link');
   if (!link) return;
 
-  const target = document.querySelector(link.getAttribute('href'));
+  const href = link.getAttribute('href');
+  if (!href.startsWith('#')) return;
+
+  const target = document.querySelector(href);
   if (!target) return;
 
   event.preventDefault();
@@ -330,7 +340,7 @@ const controlNavigation = function(event) {
     navLink.classList.toggle('nav__link--active', navLink === link);
   });
 
-  window.history.replaceState(null, '', link.getAttribute('href'));
+  window.history.replaceState(null, '', href);
 }
 
 const init = function() {

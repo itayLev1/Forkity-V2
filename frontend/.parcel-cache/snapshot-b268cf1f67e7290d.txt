@@ -1,7 +1,9 @@
-7582
+7584
 60/workspaces/Forkity-V2/frontend/forkify-flowchart-part-3.png1790022343165128081 0
 56/workspaces/Forkity-V2/frontend/dist/app.e438c7cc.js.map1790249305605676468 0
 57/workspaces/Forkity-V2/frontend/dist/frontend.d7c5322a.js1790253469745536195 0
+57/workspaces/Forkity-V2/frontend/dist/frontend.d2869dee.js1790254957920486064 0
+61/workspaces/Forkity-V2/frontend/dist/frontend.d2869dee.js.map1790254957931486064 0
 57/workspaces/Forkity-V2/frontend/dist/frontend.a06bfabc.js1790252343352574138 0
 57/workspaces/Forkity-V2/frontend/dist/frontend.0a01c7f8.js1790246248278779456 0
 57/workspaces/Forkity-V2/frontend/dist/frontend.f3d64aa5.js1790246722372763486 0
@@ -1575,7 +1577,7 @@
 72/workspaces/Forkity-V2/frontend/node_modules/@parcel/package-manager/src1790026402595430734 1
 83/workspaces/Forkity-V2/frontend/node_modules/core-js/proposals/symbol-predicates.js1790026405851430977 0
 73/workspaces/Forkity-V2/frontend/node_modules/core-js/features/set/from.js1790026405000430913 0
-47/workspaces/Forkity-V2/frontend/dist/index.html1790253469745536195 0
+47/workspaces/Forkity-V2/frontend/dist/index.html1790254957920486064 0
 87/workspaces/Forkity-V2/frontend/node_modules/@swc/helpers/_/_ts_add_disposable_resource1790026403242430782 1
 79/workspaces/Forkity-V2/frontend/node_modules/core-js/features/weak-map/index.js1790026405182430927 0
 71/workspaces/Forkity-V2/frontend/node_modules/core-js/full/map/upsert.js1790026406265431008 0
@@ -2119,7 +2121,7 @@
 76/workspaces/Forkity-V2/frontend/node_modules/caniuse-lite/data/regions/BM.js1790026402941430760 0
 84/workspaces/Forkity-V2/frontend/node_modules/core-js/stable/data-view/set-float16.js1790026405678430964 0
 69/workspaces/Forkity-V2/frontend/node_modules/core-js/stable/data-view1790026405678430964 1
-48/workspaces/Forkity-V2/frontend/js/controller.js1790252536483567632 0
+48/workspaces/Forkity-V2/frontend/js/controller.js1790254924515487189 0
 74/workspaces/Forkity-V2/frontend/node_modules/chrome-trace-event/CHANGES.md1790026401740430670 0
 76/workspaces/Forkity-V2/frontend/node_modules/core-js/stable/instance/fill.js1790026404823430900 0
 96/workspaces/Forkity-V2/frontend/node_modules/lmdb/dependencies/lmdb/libraries/liblmdb/mdb_dump.c1790026402909430757 0
@@ -3383,7 +3385,7 @@
 87/workspaces/Forkity-V2/frontend/node_modules/core-js/features/number/is-safe-integer.js1790026405271430934 0
 85/workspaces/Forkity-V2/frontend/node_modules/core-js/actual/instance/last-index-of.js1790026405334430938 0
 77/workspaces/Forkity-V2/frontend/node_modules/core-js/internals/set-iterate.js1790026405687430965 0
-54/workspaces/Forkity-V2/frontend/js/views/recipeView.js1790022343168128081 0
+54/workspaces/Forkity-V2/frontend/js/views/recipeView.js1790254912981487578 0
 91/workspaces/Forkity-V2/frontend/node_modules/caniuse-lite/data/features/cookie-store-api.js1790026403137430774 0
 66/workspaces/Forkity-V2/frontend/node_modules/commander/lib/help.js1790026401587430659 0
 77/workspaces/Forkity-V2/frontend/node_modules/core-js/es/date/to-iso-string.js1790026405952430984 0
@@ -3524,7 +3526,7 @@
 95/workspaces/Forkity-V2/frontend/node_modules/@parcel/core/test/fixtures/config-plugin-not-found1790026402409430720 1
 85/workspaces/Forkity-V2/frontend/node_modules/core-js/stable/typed-array/find-index.js1790026404845430902 0
 82/workspaces/Forkity-V2/frontend/node_modules/core-js/internals/set-intersection.js1790026405685430964 0
-42/workspaces/Forkity-V2/frontend/index.html1790252536437567634 0
+42/workspaces/Forkity-V2/frontend/index.html1790254924487487190 0
 90/workspaces/Forkity-V2/frontend/node_modules/core-js/features/dom-exception/constructor.js1790026403621430811 0
 98/workspaces/Forkity-V2/frontend/node_modules/caniuse-lite/data/features/font-variant-alternates.js1790026403836430827 0
 71/workspaces/Forkity-V2/frontend/node_modules/core-js/es/string/small.js1790026405767430971 0
@@ -6391,7 +6393,7 @@
 96/workspaces/Forkity-V2/frontend/node_modules/msgpackr-extract/node_modules/detect-libc/README.md1790026402388430719 0
 76/workspaces/Forkity-V2/frontend/node_modules/caniuse-lite/data/regions/BD.js1790026402887430756 0
 87/workspaces/Forkity-V2/frontend/node_modules/core-js/proposals/object-values-entries.js1790026405511430951 0
-36/workspaces/Forkity-V2/frontend/dist1790253469760536194 1
+36/workspaces/Forkity-V2/frontend/dist1790254957932486064 1
 87/workspaces/Forkity-V2/frontend/node_modules/core-js/proposals/well-formed-stringify.js1790026406327431012 0
 85/workspaces/Forkity-V2/frontend/node_modules/core-js/features/array/virtual/filter.js1790026404831430901 0
 82/workspaces/Forkity-V2/frontend/node_modules/core-js/proposals/array-from-async.js1790026402929430759 0

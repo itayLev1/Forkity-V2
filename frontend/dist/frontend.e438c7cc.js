@@ -923,7 +923,7 @@ const controlRecipes = async function() {
         if (!id || navigationHashes.has(id)) return;
         (0, _recipeViewJsDefault.default).renderSpinner();
         //* update results view to update selected search result
-        (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
+        if (_modelJs.state.search.results.length) (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
         //* update bookmarks view from localhost
         (0, _bookmarksViewJsDefault.default).update(_modelJs.state.bookmarks);
         //* Load recipe.
@@ -934,15 +934,17 @@ const controlRecipes = async function() {
         console.log(`controlRecipes Error \u{1F60E}: ${err}`);
         (0, _recipeViewJsDefault.default).renderError();
     }
-    // for TESTING
-    controlServings();
 };
 const controlSearchResults = async ()=>{
     try {
-        (0, _resultsViewJsDefault.default).renderSpinner();
         //* get search query
         const query = (0, _searchViewJsDefault.default).getQuery();
-        if (!query) return;
+        if (!query) {
+            (0, _resultsViewJsDefault.default).renderError('Enter a recipe name to start searching.');
+            document.querySelector('.pagination').innerHTML = '';
+            return;
+        }
+        (0, _resultsViewJsDefault.default).renderSpinner();
         //* set state with new search results
         await _modelJs.loadSearchResults(query);
         //* render results
@@ -951,6 +953,8 @@ const controlSearchResults = async ()=>{
         (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
     } catch (err) {
         console.log(`controlSearchResults Error \u{1F60E}: ${err}`);
+        (0, _resultsViewJsDefault.default).renderError('Recipes could not be loaded. Please try again.');
+        document.querySelector('.pagination').innerHTML = '';
     }
 };
 const controlPagination = function(goToPage) {
@@ -1004,7 +1008,9 @@ const controlAddRecipe = async function(newRecipe) {
 const controlNavigation = function(event) {
     const link = event.target.closest('.nav__link');
     if (!link) return;
-    const target = document.querySelector(link.getAttribute('href'));
+    const href = link.getAttribute('href');
+    if (!href.startsWith('#')) return;
+    const target = document.querySelector(href);
     if (!target) return;
     event.preventDefault();
     target.scrollIntoView({
@@ -1014,7 +1020,7 @@ const controlNavigation = function(event) {
     document.querySelectorAll('.nav__link').forEach((navLink)=>{
         navLink.classList.toggle('nav__link--active', navLink === link);
     });
-    window.history.replaceState(null, '', link.getAttribute('href'));
+    window.history.replaceState(null, '', href);
 };
 const init = function() {
     document.querySelector('.nav__links').addEventListener('click', controlNavigation);
@@ -3323,6 +3329,7 @@ class RecipeView extends (0, _viewJsDefault.default) {
     <h2 class="heading--2">Recipe ingredients</h2>
     <ul class="recipe__ingredient-list">
       ${this._data.ingredients.map(this._generateMarkupIngredient).join('')}
+    </ul>
   </div>
 
   <div class="recipe__directions">

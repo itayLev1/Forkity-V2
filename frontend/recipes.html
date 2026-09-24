@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipes | Forkify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f7f1ea;
+        --panel: rgba(255, 255, 255, 0.8);
+        --panel-strong: #ffffff;
+        --text: #1f2a37;
+        --muted: #5f6b7a;
+        --primary: #ff7a59;
+        --primary-dark: #ec5f41;
+        --green: #49b58c;
+        --shadow: 0 25px 60px rgba(31, 42, 55, 0.14);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: "Manrope", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(255, 122, 89, 0.14), transparent 24%),
+          radial-gradient(circle at bottom right, rgba(73, 181, 140, 0.14), transparent 20%),
+          var(--bg);
+      }
+      a { color: inherit; text-decoration: none; }
+      button, input { font: inherit; }
+      .shell { max-width: 1240px; margin: 0 auto; padding: 24px 24px 56px; }
+      .header, .sidebar, .bookmarks-panel, .recipe-panel, .cookbooks-panel {
+        border: 1px solid rgba(31, 42, 55, 0.06);
+        border-radius: 26px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+      .header { padding: 22px 30px; }
+      .header__inner, .nav, .nav__links, .nav__actions, .bookmarks-panel__header {
+        display: flex;
+        align-items: center;
+      }
+      .header__inner { justify-content: space-between; gap: 24px; }
+      .brand { display: flex; align-items: center; gap: 12px; }
+      .brand__mark {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        color: white;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), #ff9f66);
+        box-shadow: 0 14px 26px rgba(255, 122, 89, 0.36);
+      }
+      .brand__text { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.05em; }
+      .nav { gap: 22px; }
+      .nav__links { gap: 8px; list-style: none; padding: 0; margin: 0; }
+      .nav__link {
+        display: block;
+        padding: 10px 14px;
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 700;
+      }
+      .nav__link:hover, .nav__link--active { background: rgba(31, 42, 55, 0.06); color: var(--text); }
+      .nav__actions { gap: 10px; }
+      .chip-btn, .primary-btn, .secondary-btn, .btn--inline, .btn--round, .btn--tiny {
+        border: 0;
+        cursor: pointer;
+      }
+      .chip-btn, .primary-btn, .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 11px 17px;
+        font-weight: 800;
+      }
+      .chip-btn, .secondary-btn { background: rgba(31, 42, 55, 0.06); color: var(--text); }
+      .primary-btn { color: white; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); box-shadow: 0 12px 24px rgba(236, 95, 65, 0.22); }
+      .app-shell {
+        display: grid;
+        grid-template-columns: minmax(250px, 320px) minmax(0, 1fr) minmax(220px, 270px);
+        gap: 24px;
+        margin-top: 28px;
+        align-items: start;
+      }
+      .sidebar, .bookmarks-panel, .recipe-panel { padding: 20px; }
+      .section-heading { margin: 0 0 6px; font-size: 1.35rem; letter-spacing: -0.04em; }
+      .section-copy { margin: 0 0 18px; color: var(--muted); line-height: 1.6; }
+      .search { display: flex; align-items: center; gap: 10px; padding: 9px 10px 9px 16px; border: 1px solid rgba(31, 42, 55, 0.1); border-radius: 999px; background: rgba(247, 241, 234, 0.95); }
+      .search__field { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text); }
+      .search__btn { padding: 9px 14px; box-shadow: none; }
+      .results, .bookmarks__list { display: grid; gap: 12px; list-style: none; margin: 18px 0 0; padding: 0; }
+      .preview { overflow: hidden; border: 1px solid rgba(31, 42, 55, 0.06); border-radius: 18px; background: rgba(255, 255, 255, 0.9); }
+      .preview__link { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding: 10px; }
+      .preview__link--active { border-left: 3px solid var(--primary); background: rgba(255, 122, 89, 0.08); }
+      .preview__fig { margin: 0; }
+      .preview__fig img { display: block; width: 76px; height: 76px; border-radius: 14px; object-fit: cover; }
+      .preview__title { margin: 2px 0 4px; font-size: 0.94rem; line-height: 1.35; }
+      .preview__publisher { margin: 0; color: var(--muted); font-size: 0.74rem; }
+      .recipe { min-height: 620px; }
+      .recipe__fig { position: relative; height: 300px; margin: 0; overflow: hidden; border-radius: 22px; }
+      .recipe__img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .recipe__title { position: absolute; right: 18px; bottom: 16px; left: 18px; margin: 0; padding: 14px 18px; border-radius: 16px; color: white; background: rgba(31, 42, 55, 0.52); font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.1; }
+      .recipe__details { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; padding: 18px 6px 8px; }
+      .recipe__info { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 700; }
+      .recipe__info-icon, .recipe__icon, .search__icon { width: 18px; height: 18px; fill: var(--primary); }
+      .recipe__info-buttons { display: flex; gap: 8px; margin-left: 8px; }
+      .btn--tiny { width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 122, 89, 0.12); color: var(--primary-dark); }
+      .btn--round { display: grid; place-items: center; width: 46px; height: 46px; margin-left: auto; border-radius: 50%; background: rgba(255, 122, 89, 0.12); }
+      .btn--round svg { width: 22px; height: 22px; fill: var(--primary); }
+      .recipe__ingredients, .recipe__directions { padding: 20px 8px 8px; }
+      .heading--2 { margin: 0 0 14px; font-size: 1.3rem; }
+      .recipe__ingredient-list { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
+      .recipe__ingredient { display: flex; align-items: flex-start; gap: 10px; }
+      .recipe__quantity { min-width: 34px; font-weight: 700; }
+      .recipe__description, .recipe__directions-text { color: var(--muted); line-height: 1.7; }
+      .recipe__unit, .recipe__publisher { font-weight: 800; color: var(--text); }
+      .recipe__btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; }
+      .pagination { display: flex; justify-content: space-between; gap: 8px; margin-top: 16px; }
+      .btn--inline { padding: 10px 12px; border-radius: 999px; background: rgba(255, 122, 89, 0.12); color: var(--text); font-weight: 800; }
+      .bookmarks-panel__header { justify-content: space-between; gap: 10px; }
+      .eyebrow { display: inline-flex; padding: 7px 12px; border-radius: 999px; color: #1a8a65; background: rgba(73, 181, 140, 0.12); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+      .bookmark-empty, .error, .message { color: var(--muted); line-height: 1.6; }
+      .recipe-empty { min-height: 620px; display: grid; place-content: center; justify-items: center; padding: 32px; text-align: center; }
+      .recipe-empty h2 { margin: 18px 0 8px; font-size: 1.7rem; letter-spacing: -0.04em; }
+      .recipe-empty p { max-width: 390px; margin: 0; color: var(--muted); line-height: 1.7; }
+      .add-recipe-window { position: fixed; z-index: 30; top: 50%; left: 50%; width: min(92vw, 820px); transform: translate(-50%, -50%); padding: 28px 30px 22px; border-radius: 28px; background: white; box-shadow: var(--shadow); }
+      .hidden { display: none !important; }
+      .overlay { position: fixed; z-index: 20; inset: 0; background: rgba(31, 42, 55, 0.3); }
+      .btn--close-modal { position: absolute; top: 8px; right: 14px; border: 0; background: transparent; color: var(--muted); font-size: 2.4rem; cursor: pointer; }
+      .upload { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+      .upload__heading { grid-column: 1 / -1; margin: 0; font-size: 1.8rem; }
+      .upload__column { display: grid; grid-template-columns: 110px 1fr; gap: 8px 12px; align-items: center; }
+      .upload__column label { color: var(--muted); font-weight: 700; }
+      .upload__column input { width: 100%; padding: 10px 12px; border: 1px solid rgba(31, 42, 55, 0.12); border-radius: 12px; }
+      .upload__btn { grid-column: 1 / -1; justify-self: center; padding: 12px 18px; border: 0; border-radius: 999px; color: white; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); font-weight: 800; cursor: pointer; }
+      @media (max-width: 1080px) { .app-shell { grid-template-columns: 1fr; } }
+      @media (max-width: 700px) { .header__inner, .nav { align-items: flex-start; flex-direction: column; } .nav__links { flex-wrap: wrap; } .app-shell { margin-top: 18px; } .upload { grid-template-columns: 1fr; } .upload__heading, .upload__btn { grid-column: auto; } }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="header">
+        <div class="header__inner">
+          <a class="brand" href="index.html" aria-label="Forkify home">
+            <div class="brand__mark">F</div>
+            <div class="brand__text">forkify</div>
+          </a>
+          <nav class="nav" aria-label="Main navigation">
+            <ul class="nav__links">
+              <li><a class="nav__link" href="index.html">Home</a></li>
+              <li><a class="nav__link nav__link--active" href="recipes.html">Recipes</a></li>
+              <li><a class="nav__link" href="index.html#collections">Collections</a></li>
+              <li><a class="nav__link" href="index.html#cookbooks">Cookbooks</a></li>
+            </ul>
+            <div class="nav__actions">
+              <button class="chip-btn" type="button">Log in</button>
+              <button class="primary-btn nav__btn--add-recipe" type="button">Get started</button>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <main class="app-shell">
+        <aside class="sidebar">
+          <h1 class="section-heading">Find a recipe</h1>
+          <p class="section-copy">Search the library and open a dish to see its ingredients and directions.</p>
+          <form class="search" role="search">
+            <input class="search__field" type="text" placeholder="Search for recipes..." aria-label="Search recipes" />
+            <button class="primary-btn search__btn" type="submit">Search</button>
+          </form>
+          <ul class="results" aria-live="polite"></ul>
+          <div class="pagination"></div>
+        </aside>
+
+        <section class="recipe-panel">
+          <div class="recipe" aria-live="polite">
+            <div class="recipe-empty">
+              <span class="eyebrow">Recipe workspace</span>
+              <h2>Choose a recipe to get started</h2>
+              <p>Search the library on the left, then select a result to see ingredients, servings, and cooking directions.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="bookmarks-panel">
+          <div class="bookmarks-panel__header">
+            <span class="eyebrow">Collections</span>
+            <button class="chip-btn nav__btn--bookmarks" type="button">Bookmarks</button>
+          </div>
+          <p class="section-copy">Keep the recipes you want to cook again close at hand.</p>
+          <ul class="bookmarks__list"></ul>
+        </aside>
+      </main>
+    </div>
+
+    <div class="overlay hidden"></div>
+    <div class="add-recipe-window hidden" role="dialog" aria-modal="true">
+      <button class="btn--close-modal" type="button" aria-label="Close add recipe window">×</button>
+      <form class="upload">
+        <h3 class="upload__heading">Add your recipe</h3>
+        <div class="upload__column"><label for="title">Title</label><input id="title" name="title" type="text" required /></div>
+        <div class="upload__column"><label for="sourceUrl">URL</label><input id="sourceUrl" name="sourceUrl" type="url" required /></div>
+        <div class="upload__column"><label for="image">Image</label><input id="image" name="image" type="url" required /></div>
+        <div class="upload__column"><label for="publisher">Publisher</label><input id="publisher" name="publisher" type="text" required /></div>
+        <div class="upload__column"><label for="cookingTime">Time</label><input id="cookingTime" name="cookingTime" type="number" min="1" required /></div>
+        <div class="upload__column"><label for="servings">Servings</label><input id="servings" name="servings" type="number" min="1" required /></div>
+        <div class="upload__column"><label for="ingredient-1">Ingredients</label><input id="ingredient-1" name="ingredient-1" type="text" /></div>
+        <div class="upload__column"><label for="ingredient-2">Ingredients</label><input id="ingredient-2" name="ingredient-2" type="text" /></div>
+        <div class="upload__column"><label for="ingredient-3">Ingredients</label><input id="ingredient-3" name="ingredient-3" type="text" /></div>
+        <button class="upload__btn" type="submit">Submit recipe</button>
+      </form>
+    </div>
+
+    <script type="module" src="./js/controller.js"></script>
+  </body>
+</html>
