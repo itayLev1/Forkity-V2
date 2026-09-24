@@ -20,6 +20,7 @@ export const state = {
     resultsPerPage: RESULTS_PER_PAGE,
   },
   bookmarks: [],
+  user: null,
 };
 
 const createRecipeObject = function(data) {
@@ -115,35 +116,89 @@ const persistBookmarks = function() {
   console.log('state.bookmarks: ', state.bookmarks);
 }
 
+const persistUser = function() {
+  if (typeof localStorage === 'undefined') return;
+
+  localStorage.setItem('forkity-user', JSON.stringify(state.user));
+}
+
+export const initializeUser = async function () {
+  if (state.user) return state.user;
+
+  if (typeof localStorage === 'undefined') return null;
+
+  const savedUser = localStorage.getItem('forkity-user');
+  if (savedUser) {
+    state.user = JSON.parse(savedUser);
+    return state.user;
+  }
+
+  const payload = {
+    email: `demo-${Date.now()}@forkity.local`,
+    name: 'Demo User',
+    password: 'password123',
+  };
+
+  const user = await AJAX(`${API_URL}/users`, payload);
+  state.user = user;
+  persistUser();
+
+  return state.user;
+};
+
+export const syncBookmarks = async function () {
+  if (!state.user) return;
+
+  try {
+    const data = await AJAX(`${API_URL}/users/${state.user.id}/bookmarks`);
+    state.bookmarks = data.map(recipe => ({
+      id: recipe.id,
+      title: recipe.title,
+      publisher: recipe.publisher,
+      image: recipe.imageUrl ?? recipe.image_url,
+      sourceUrl: recipe.sourceUrl ?? recipe.source_url,
+      cookingTime: recipe.cookingTime ?? recipe.cooking_time,
+      servings: recipe.servings,
+      ingredients: recipe.ingredients ?? [],
+    }));
+    persistBookmarks();
+  } catch (err) {
+    console.log('syncBookmarks skipped', err);
+  }
+};
+
 //* add bookmark
-export const addBookmark = function(recipe) {
+export const addBookmark = async function(recipe) {
+  if (!state.user) await initializeUser();
   if (state.bookmarks.some(bookmark => bookmark.id === recipe.id)) return;
 
-  // add bookmark
   state.bookmarks.push(recipe)
 
-  // mark current recipe as bookmarked
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true
+
+  if (state.user) {
+    await AJAX(`${API_URL}/users/${state.user.id}/bookmarks/${recipe.id}`, undefined, 'POST');
+  }
   
   console.log('added bookmark');
-  // save bookmarks array to local storage (as a string). to update the persisting bookmarks (on local storage)
   persistBookmarks();
 }
 
 //* remove bookmark
-export const deleteBookmark = function(id) {
-  // delete bookmark
+export const deleteBookmark = async function(id) {
   const index = state.bookmarks.findIndex(el => el.id === id)
   if (index === -1) return;
 
   state.bookmarks.splice(index, 1)
 
-    // mark current recipe as NOT bookmarked
     if (id === state.recipe.id) state.recipe.bookmarked = false
+
+    if (state.user) {
+      await AJAX(`${API_URL}/users/${state.user.id}/bookmarks/${id}`, undefined, 'DELETE');
+    }
 
     console.log('deleted bookmark');
 
-    // save bookmarks array to local storage (as a string). to update the persisting bookmarks (on local storage)
     persistBookmarks();
 }
 
@@ -152,7 +207,9 @@ const init = function() {
 
   const storage = localStorage.getItem('bookmarks');
   if (storage) state.bookmarks = JSON.parse(storage);
-  // console.log(storage.parse());
+
+  const savedUser = localStorage.getItem('forkity-user');
+  if (savedUser) state.user = JSON.parse(savedUser);
 };
 init();
 

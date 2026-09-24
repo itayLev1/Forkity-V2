@@ -16,22 +16,51 @@ globalThis.localStorage = {
 
 const loadModel = async () => import('../js/model.js');
 
+globalThis.fetch = async (url, options = {}) => {
+  if (url.endsWith('/users') && (options.method || 'GET') === 'POST') {
+    return {
+      ok: true,
+      json: async () => ({ id: 'local-user', email: 'demo@example.com', name: 'Demo User' }),
+    };
+  }
+
+  if (url.includes('/bookmarks/') && (options.method || 'GET') === 'POST') {
+    return {
+      ok: true,
+      json: async () => ({ status: 'created' }),
+    };
+  }
+
+  if (url.includes('/bookmarks/') && (options.method || 'GET') === 'DELETE') {
+    return {
+      ok: true,
+      json: async () => ({ deleted: true }),
+    };
+  }
+
+  return {
+    ok: true,
+    json: async () => ([]),
+  };
+};
+
 test('bookmark toggling keeps one copy and ignores unknown deletions', async () => {
   const { state, addBookmark, deleteBookmark, updateServings } = await loadModel();
 
+  state.user = { id: 'local-user', email: 'demo@example.com', name: 'Demo User' };
   state.bookmarks.length = 0;
   state.recipe = { id: 'r1', bookmarked: false, servings: 2, ingredients: [{ quantity: 1 }, { quantity: 2 }] };
 
   const recipe = { id: 'r1', title: 'Test Recipe' };
 
-  addBookmark(recipe);
-  addBookmark(recipe);
+  await addBookmark(recipe);
+  await addBookmark(recipe);
   assert.equal(state.bookmarks.length, 1, 'duplicate bookmark should not be added');
 
-  deleteBookmark('missing-id');
+  await deleteBookmark('missing-id');
   assert.equal(state.bookmarks.length, 1, 'deleting an unknown bookmark should keep the list stable');
 
-  deleteBookmark('r1');
+  await deleteBookmark('r1');
   assert.equal(state.bookmarks.length, 0, 'bookmark should be removed once');
   assert.equal(state.recipe.bookmarked, false, 'recipe should no longer be marked as bookmarked');
 

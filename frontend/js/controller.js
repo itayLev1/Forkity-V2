@@ -266,17 +266,15 @@ const controlServings = function(newServings = model.state.recipe.servings) {
   recipeView.update(model.state.recipe);
 }
 
-const controlAddBookmark = function() {
-  // adds or removes bookmark at the current recipe (boolean)
-if(!model.state.recipe.bookmarked) 
-  model.addBookmark(model.state.recipe)
-else model.deleteBookmark(model.state.recipe.id)
+const controlAddBookmark = async function() {
+  await model.initializeUser();
 
-console.log(model.state.recipe);
-  // updates recipeView with new bookmark data
+  if(!model.state.recipe.bookmarked) 
+    await model.addBookmark(model.state.recipe)
+  else await model.deleteBookmark(model.state.recipe.id)
+
+  console.log(model.state.recipe);
   recipeView.update(model.state.recipe)
-
-  // render the bookmarks
   bookmarksView.render(model.state.bookmarks)
 }
 
