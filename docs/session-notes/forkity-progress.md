@@ -5,7 +5,11 @@
 
 ## Status
 - Stage 2 frontend foundation is complete.
-- Stage 3 functional app work has started.
+- Stage 3 functional app work is stabilized.
+- Stage 4 search flow validation is complete.
+- Stage 5 Dockerization is complete.
+- Stage 6 Jenkins CI pipeline is complete.
+- Stage 7 deployment repository separation strategy is documented.
 - Design polishing is intentionally deferred until a later stage.
 
 ## Completed work
@@ -24,16 +28,12 @@
 - npm run build: Parcel build succeeded
 
 ## Next session target
-- Continue with Stage 3: functional recipe interactions
-  - search recipe results
-  - open recipe detail
-  - bookmark toggling
-  - servings adjustments
-  - add recipe submission flow
-  - local validation and tests
+- Continue with Stage 8: backend and database integration with users + bookmarks
+  - define Prisma schema
+  - add database models
+  - connect API endpoints for users, recipes, and bookmarks
+  - wire frontend to backend state
 
 ## Future phases planned
-- Dockerization
-- Jenkins CI pipeline
-- deployment repo separation for Kubernetes + Terraform
 - backend and database integration with users and bookmarks
+- deployment repo for Kubernetes + Terraform

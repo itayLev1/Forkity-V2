@@ -3,7 +3,7 @@
 ## Current status
 - Project reviewed: visual direction, repo scope, architecture diagram, and future deployment constraints.
 - Requirement added: user management and bookmarks must be included in the database model.
-- Current phase: Stage 1 — confirm app flows and data model before implementation begins.
+- Current phase: Stage 7 — deployment repository separation strategy documented.
 
 ## Project direction
 - Build a polished recipe app matching the approved frontend design.
