@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../node_modules/.prisma/client/index.js';
 
 const prisma = globalThis.__forkityPrisma ?? new PrismaClient();
 

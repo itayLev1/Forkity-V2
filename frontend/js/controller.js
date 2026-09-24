@@ -192,6 +192,8 @@ import addRecipeView from './views/addRecipeView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+const navigationHashes = new Set(['home', 'recipes', 'collections', 'cookbooks']);
+
 
 // if (module.hot) {
 //   module.hot.accept();
@@ -202,7 +204,7 @@ const controlRecipes = async function () {
 
     const id = window.location.hash.slice(1);
 
-    if (!id) return;
+    if (!id || navigationHashes.has(id)) return;
 
     recipeView.renderSpinner();
 
@@ -314,7 +316,25 @@ const controlAddRecipe = async function(newRecipe) {
   }
 }
 
+const controlNavigation = function(event) {
+  const link = event.target.closest('.nav__link');
+  if (!link) return;
+
+  const target = document.querySelector(link.getAttribute('href'));
+  if (!target) return;
+
+  event.preventDefault();
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  document.querySelectorAll('.nav__link').forEach(navLink => {
+    navLink.classList.toggle('nav__link--active', navLink === link);
+  });
+
+  window.history.replaceState(null, '', link.getAttribute('href'));
+}
+
 const init = function() {
+  document.querySelector('.nav__links').addEventListener('click', controlNavigation);
   bookmarksView.addHandlerRender(controlBookmarks)
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);

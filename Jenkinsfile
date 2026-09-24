@@ -3,6 +3,7 @@ pipeline {
 
   environment {
     NODE_ENV = 'test'
+    DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/forkity?schema=public'
   }
 
   stages {
@@ -17,6 +18,24 @@ pipeline {
         dir('frontend') {
           sh 'npm ci'
         }
+        dir('backend') {
+          sh 'npm ci'
+        }
+      }
+    }
+
+    stage('Validate backend') {
+      steps {
+        dir('backend') {
+          sh 'npm run check'
+          sh 'npm run prisma:validate'
+        }
+      }
+    }
+
+    stage('Validate Compose') {
+      steps {
+        sh 'docker compose config --quiet'
       }
     }
 

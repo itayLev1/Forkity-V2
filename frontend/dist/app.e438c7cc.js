@@ -908,19 +908,13 @@ var _bookmarksViewJsDefault = parcelHelpers.interopDefault(_bookmarksViewJs);
 var _addRecipeViewJs = require("./views/addRecipeView.js");
 var _addRecipeViewJsDefault = parcelHelpers.interopDefault(_addRecipeViewJs);
 var _runtime = require("regenerator-runtime/runtime");
-const navigationHashes = new Set([
-    'home',
-    'recipes',
-    'collections',
-    'cookbooks'
-]);
 // if (module.hot) {
 //   module.hot.accept();
 // }
 const controlRecipes = async function() {
     try {
         const id = window.location.hash.slice(1);
-        if (!id || navigationHashes.has(id)) return;
+        if (!id) return;
         (0, _recipeViewJsDefault.default).renderSpinner();
         //* update results view to update selected search result
         (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
@@ -1001,23 +995,7 @@ const controlAddRecipe = async function(newRecipe) {
         (0, _addRecipeViewJsDefault.default).renderError(err.message);
     }
 };
-const controlNavigation = function(event) {
-    const link = event.target.closest('.nav__link');
-    if (!link) return;
-    const target = document.querySelector(link.getAttribute('href'));
-    if (!target) return;
-    event.preventDefault();
-    target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-    document.querySelectorAll('.nav__link').forEach((navLink)=>{
-        navLink.classList.toggle('nav__link--active', navLink === link);
-    });
-    window.history.replaceState(null, '', link.getAttribute('href'));
-};
 const init = function() {
-    document.querySelector('.nav__links').addEventListener('click', controlNavigation);
     (0, _bookmarksViewJsDefault.default).addHandlerRender(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
@@ -3666,4 +3644,4 @@ const handleUploadSubmit = function(handler, formElement) {
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5HW5M","cCMpN"], "cCMpN", "parcelRequire3a11", {}, "./", "/")
 
-//# sourceMappingURL=frontend.e438c7cc.js.map
+//# sourceMappingURL=app.e438c7cc.js.map

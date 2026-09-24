@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "db": "docker compose up -d db",
-    "backend": "cd backend && PORT=4000 node src/server.js",
+    "backend": "cd backend && npm run prisma:generate && PORT=4000 node src/server.js",
     "frontend": "cd frontend && npm run start -- --host 0.0.0.0",
     "dev": "node scripts/dev.js",
     "start": "npm run db && npm run dev"
